@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlashTask | Urgent Micro-Work. Vetted Students. Done in Hours.</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Motion (Framer Motion Web Engine) -->
+  <script src="https://cdn.jsdelivr.net/npm/motion@latest/dist/motion.js"></script>
+  <!-- Canvas Confetti for Celebration Effects -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#EEF2FF',
+              100: '#E0E7FF',
+              500: '#6366F1',
+              600: '#4F46E5',
+              700: '#4338CA',
+              900: '#312E81'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white relative">
+
+  <!-- ========================================================= -->
+  <!-- DYNAMIC LIVE BACKGROUND MOTION LAYER                      -->
+  <!-- ========================================================= -->
+  <div class="fixed inset-0 pointer-events-none -z-30 overflow-hidden">
+    <!-- Animated Cyber Grid -->
+    <div class="absolute inset-0 bg-cyber-grid opacity-75"></div>
+
+    <!-- Live Morphing Gradient Aurora Orbs -->
+    <div class="absolute -top-32 -left-32 w-[34rem] h-[34rem] bg-gradient-to-tr from-indigo-400/35 via-violet-300/30 to-blue-200/20 rounded-full blur-3xl live-blob-1"></div>
+    <div class="absolute top-1/3 -right-32 w-[38rem] h-[38rem] bg-gradient-to-bl from-purple-400/30 via-indigo-300/25 to-pink-200/20 rounded-full blur-3xl live-blob-2"></div>
+    <div class="absolute -bottom-32 left-1/4 w-[36rem] h-[36rem] bg-gradient-to-tr from-emerald-300/25 via-teal-200/25 to-indigo-300/20 rounded-full blur-3xl live-blob-3"></div>
+
+    <!-- Live Interactive Particle & Synapse Network Canvas -->
+    <canvas id="bg-network-canvas" class="absolute inset-0 w-full h-full opacity-60"></canvas>
+  </div>
+
+  <!-- TOP HEADER / NAV BAR -->
+  <header class="sticky top-0 z-50 glass-panel border-b border-slate-200/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo with Spring Hover -->
+      <div id="nav-brand-logo" class="flex items-center space-x-3 cursor-pointer btn-spring" onclick="app.switchView('landing')">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+          <i data-lucide="zap" class="w-6 h-6 fill-current"></i>
+        </div>
+        <div>
+          <span class="text-xl font-extrabold tracking-tight text-slate-900">Flash<span class="text-indigo-600">Task</span></span>
+          <span class="hidden sm:inline-block ml-2 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-indigo-100 text-indigo-800 rounded-full">Available Now Engine</span>
+        </div>
+      </div>
+
+      <!-- Live Online Students Radar Ticker with Background Motion Indicator -->
+      <div class="hidden md:flex items-center space-x-2.5 bg-emerald-50/90 border border-emerald-200/80 px-3.5 py-1.5 rounded-full text-xs text-emerald-900 font-semibold shadow-sm backdrop-blur-md">
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+        </span>
+        <span><strong id="live-student-count">384</strong> Students Live & Ready</span>
+        <span class="text-slate-300">|</span>
+        <span class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider flex items-center">
+          <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-1 animate-pulse"></span>
+          Live Mesh ON
+        </span>
+      </div>
+
+      <!-- View Switcher Tabs (Framer Motion Animated) -->
+      <nav id="nav-tab-container" class="flex items-center bg-slate-100/90 p-1 rounded-xl text-xs font-bold space-x-1 border border-slate-200/60 shadow-inner backdrop-blur-md">
+        <button data-view-target="landing" class="btn-spring px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition-all flex items-center space-x-1.5">
+          <i data-lucide="compass" class="w-3.5 h-3.5"></i>
+          <span>Overview</span>
+        </button>
+        <button data-view-target="client" class="btn-spring px-3.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-200 transition-all flex items-center space-x-1.5">
+          <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+          <span>Client Dashboard</span>
+        </button>
+        <button data-view-target="student" class="btn-spring px-3.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-200 transition-all flex items-center space-x-1.5">
+          <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+          <span>Student View</span>
+        </button>
+        <button data-view-target="split" class="btn-spring hidden lg:flex px-3.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-200 transition-all items-center space-x-1.5">
+          <i data-lucide="split" class="w-3.5 h-3.5"></i>
+          <span>Dual Simulator</span>
+        </button>
+      </nav>
+
+      <!-- Top Right Header Actions (Professional & Refined) -->
+      <div class="flex items-center space-x-2.5">
+        <!-- Post a Task Quick Button -->
+        <button onclick="app.focusPostTask()" class="btn-spring hidden sm:flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-md shadow-indigo-600/25 transition-all">
+          <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+          <span>Post a Task</span>
+        </button>
+
+        <!-- Sign Up CTA Button -->
+        <button onclick="app.openSignUpModal()" class="btn-spring flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white text-xs font-bold shadow-md shadow-indigo-500/20 transition-all">
+          <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+          <span>Sign Up</span>
+        </button>
+
+        <!-- Quick Access to Bottom-Right Profile Hub -->
+        <button onclick="app.openBottomRightProfile()" title="Open Profiles Hub (Bottom Right)" class="btn-spring flex items-center space-x-1 px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white/95 hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 shadow-sm transition-all text-xs font-bold">
+          <i data-lucide="layers" class="w-3.5 h-3.5 text-indigo-600"></i>
+          <span class="hidden md:inline">Profile Hub</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-grow relative">
+
+    <!-- ========================================== -->
+    <!-- 1. LANDING PAGE VIEW                      -->
+    <!-- ========================================== -->
+    <section id="view-landing" class="tab-content">
+      
+      <!-- Hero Section -->
+      <div class="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          
+          <div id="hero-badge" class="inline-flex items-center space-x-2 bg-indigo-100/90 border border-indigo-200 px-4 py-1.5 rounded-full text-xs font-bold text-indigo-900 mb-6 shadow-sm backdrop-blur-md">
+            <span class="flex h-2 w-2 relative">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-600"></span>
+            </span>
+            <span>⚡ The 10-Minute Reverse Bidding Marketplace</span>
+            <span class="text-indigo-300">•</span>
+            <span class="text-indigo-700">No proposals. No waiting weeks.</span>
+          </div>
+
+          <h1 id="hero-title" class="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight leading-tight">
+            Urgent Micro-Work.<br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600 animate-shimmer">Vetted College Talent.</span><br>
+            Done in Under 2 Hours.
+          </h1>
+
+          <p id="hero-desc" class="mt-6 max-w-2xl mx-auto text-lg text-slate-600">
+            Post bite-sized tasks to skilled students who toggled <strong>"Available Now"</strong> between classes.
+            Save 40% through our fast, fair-wage bidding system with automated escrow security.
+          </p>
+
+          <!-- Call to Action Buttons with Spring Scale -->
+          <div id="hero-cta" class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button onclick="app.switchView('client')" class="btn-spring w-full sm:w-auto px-8 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-base shadow-lg shadow-indigo-500/25 transition-all flex items-center justify-center space-x-2 group">
+              <span>Post a Micro-Task Now</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1"></i>
+            </button>
+            <button onclick="app.switchView('student')" class="btn-spring w-full sm:w-auto px-8 py-4 rounded-xl bg-white/90 backdrop-blur-md border border-slate-300 hover:border-slate-400 text-slate-700 font-bold text-base shadow-sm transition-all flex items-center justify-center space-x-2">
+              <i data-lucide="graduation-cap" class="w-4 h-4 text-indigo-600"></i>
+              <span>Earn as a Student</span>
+            </button>
+          </div>
+
+          <!-- Feature Highlights Bar (Animated Stagger) -->
+          <div id="hero-features-bar" class="mt-14 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            <div class="btn-spring p-4 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200/80 shadow-sm text-center">
+              <div class="text-2xl font-black text-indigo-600">5-15 Mins</div>
+              <div class="text-xs font-semibold text-slate-500 mt-1">Average Match Time</div>
+            </div>
+            <div class="btn-spring p-4 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200/80 shadow-sm text-center">
+              <div class="text-2xl font-black text-emerald-600">38% Savings</div>
+              <div class="text-xs font-semibold text-slate-500 mt-1">vs. Upwork & Agencies</div>
+            </div>
+            <div class="btn-spring p-4 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200/80 shadow-sm text-center">
+              <div class="text-2xl font-black text-slate-900">100% Escrow</div>
+              <div class="text-xs font-semibold text-slate-500 mt-1">Instant UPI Release</div>
+            </div>
+            <div class="btn-spring p-4 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200/80 shadow-sm text-center">
+              <div class="text-2xl font-black text-violet-600">Verified Skills</div>
+              <div class="text-xs font-semibold text-slate-500 mt-1">Top Engineering & Design Hubs</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Interactive ROI & Savings Calculator -->
+      <div class="py-16 bg-white/80 backdrop-blur-md border-y border-slate-200/80">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+          <div class="text-center mb-8">
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900">Calculate Your Company's Monthly Savings</h2>
+            <p class="text-slate-500 text-sm mt-1">Compare our 10-minute micro-bidding model against traditional freelance platforms</p>
+          </div>
+
+          <div class="bg-slate-50/90 border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm">
+            <div class="mb-6">
+              <div class="flex justify-between items-center mb-2">
+                <label class="text-sm font-bold text-slate-700">Small Micro-Tasks Per Month (Thumbnails, bug fixes, copy)</label>
+                <span id="calc-tasks-label" class="text-lg font-black text-indigo-600">10 tasks</span>
+              </div>
+              <input id="calc-tasks-month" type="range" min="3" max="50" value="10" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-200 text-center">
+              <div class="p-4 rounded-xl bg-white border border-slate-200 btn-spring shadow-sm">
+                <div class="text-xs text-slate-400 font-bold uppercase">Upwork / Agency Cost</div>
+                <div id="calc-upwork-total" class="text-2xl font-black text-slate-800 mt-1">₹1,20,000</div>
+                <div class="text-[10px] text-slate-400 mt-1">Avg ₹12,000/task + 10-day wait</div>
+              </div>
+              <div class="p-4 rounded-xl bg-indigo-50/90 border border-indigo-200 btn-spring shadow-sm">
+                <div class="text-xs text-indigo-600 font-bold uppercase">FlashTask Fast Bid</div>
+                <div id="calc-flashtask-total" class="text-2xl font-black text-indigo-700 mt-1">₹50,000</div>
+                <div class="text-[10px] text-indigo-500 mt-1">Avg ₹5,000/task (Min Floor) • Under 2 hrs</div>
+              </div>
+              <div class="p-4 rounded-xl bg-emerald-50/90 border border-emerald-200 btn-spring shadow-sm">
+                <div class="text-xs text-emerald-700 font-bold uppercase">You Save Each Month</div>
+                <div id="calc-savings-total" class="text-2xl font-black text-emerald-600 mt-1">₹70,000</div>
+                <div class="text-[10px] text-emerald-600 font-bold mt-1">58% Cheaper & 20x Faster</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- How It Works Flow -->
+      <div class="py-16 max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-black text-slate-900">How FlashTask Operates in Real-Time</h2>
+          <p class="text-slate-500 text-sm mt-1">Solving the double-sided liquidity problem with synchronous matching</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="p-6 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200 shadow-sm relative btn-spring">
+            <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-black text-xl mb-4">1</div>
+            <h3 class="text-lg font-bold text-slate-900">Student Turns "Available Now"</h3>
+            <p class="text-sm text-slate-600 mt-2">Between college lectures, a student toggles "Available for 2 Hours". Active heartbeat tracking ensures zero ghosting.</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200 shadow-sm relative btn-spring">
+            <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-black text-xl mb-4">2</div>
+            <h3 class="text-lg font-bold text-slate-900">10-Minute Reverse Bidding</h3>
+            <p class="text-sm text-slate-600 mt-2">Client broadcasts a 1-2h micro-task. Available students bid. The Smart Ranking Algorithm prioritizes quality over cheap spam.</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200 shadow-sm relative btn-spring">
+            <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-black text-xl mb-4">3</div>
+            <h3 class="text-lg font-bold text-slate-900">Instant Escrow Release</h3>
+            <p class="text-sm text-slate-600 mt-2">Deliverable submitted within 90 minutes. Client inspects watermarked preview; UPI funds release straight to student's bank.</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 2. CLIENT (HIRE) DASHBOARD & BIDDING ROOM  -->
+    <!-- ========================================== -->
+    <section id="view-client" class="tab-content hidden max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      
+      <!-- Top Action Bar -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 border-b border-slate-200 gap-4">
+        <div>
+          <div class="flex items-center space-x-2">
+            <h2 class="text-2xl font-black text-slate-900">Client Dashboard & Dispatch Center</h2>
+            <span class="bg-indigo-100 text-indigo-800 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">Hirer Portal</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">Post micro-tasks with custom required skills, urgency, budget & minimum bid floor. Real-time reverse bidding within 10 minutes.</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="app.focusPostTask()" class="btn-spring text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 px-3.5 py-1.5 rounded-lg shadow-sm flex items-center space-x-1.5">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+            <span>Post a Task</span>
+          </button>
+          <button onclick="app.openProfileModal('client')" class="btn-spring text-xs font-bold text-indigo-600 hover:text-indigo-800 px-3.5 py-1.5 border border-indigo-200 rounded-lg bg-indigo-50/80 shadow-sm flex items-center space-x-1.5">
+            <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
+            <span>Client Profile</span>
+          </button>
+          <button onclick="app.resetDemo()" class="btn-spring text-xs font-bold text-slate-500 hover:text-slate-800 px-3.5 py-1.5 border border-slate-300 rounded-lg bg-white/90 shadow-sm">
+            🔄 Reset Demo
+          </button>
+        </div>
+      </div>
+
+      <!-- CLIENT PROFILE STATUS BAR -->
+      <div class="mt-6 p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white border border-indigo-500/30 shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div class="flex items-center space-x-3.5">
+          <div class="w-10 h-10 rounded-xl bg-indigo-600/30 border border-indigo-400/40 flex items-center justify-center text-indigo-300 flex-shrink-0">
+            <i data-lucide="briefcase" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs font-black text-white">Client Portal: Kunal Shah</span>
+              <span class="badge-enterprise text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase">Razorpay Enterprise</span>
+              <span class="text-xs text-emerald-400 font-mono font-bold">Escrow: ₹45,000</span>
+            </div>
+            <p class="text-[11px] text-indigo-200 mt-0.5">Verified Hirer • GST 29ABCDE1234F1Z5 • 4.95 Rating • Managed via bottom-right profile hub.</p>
+          </div>
+        </div>
+        <button onclick="app.openBottomRightProfile('client')" class="btn-spring px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/30 flex items-center space-x-1.5 whitespace-nowrap">
+          <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
+          <span>Open Client Profile</span>
+          <i data-lucide="arrow-down-right" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <!-- STEP 1: TASK CREATOR CARD (POST A TASK IN CLIENT DASHBOARD) -->
+      <div id="task-creation-card" class="mt-6 bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-sm">
+        
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 mb-4 border-b border-slate-100 gap-2">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="bg-indigo-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider">Client Dashboard</span>
+              <h3 class="text-lg font-black text-slate-900">Post a Micro-Task & Dispatch</h3>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Specify task scope, required skills, urgency, budget & minimum bid floor to broadcast.</p>
+          </div>
+          <span class="text-xs text-indigo-600 font-bold bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">Zero Scope-Creep Guarantee</span>
+        </div>
+
+        <!-- Template Selector Chips -->
+        <div class="mb-6">
+          <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Or Choose a Standardized Micro-Task Template:</label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <button type="button" onclick="app.loadTemplate(TASK_TEMPLATES[0])" class="btn-spring p-3 text-left border rounded-xl hover:border-indigo-600 focus:ring-2 focus:ring-indigo-500 transition-all bg-slate-50/90 hover:bg-white shadow-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-bold text-indigo-600 uppercase">Design</span>
+                <span class="text-[9px] bg-amber-100 text-amber-800 font-extrabold px-1.5 py-0.2 rounded">Urgent</span>
+              </div>
+              <div class="text-xs font-bold text-slate-900 mt-1 line-clamp-1">YouTube Thumbnail</div>
+              <div class="text-[10px] text-slate-500 mt-0.5">90m • Min ₹1,000</div>
+            </button>
+            <button type="button" onclick="app.loadTemplate(TASK_TEMPLATES[1])" class="btn-spring p-3 text-left border rounded-xl hover:border-indigo-600 focus:ring-2 focus:ring-indigo-500 transition-all bg-slate-50/90 hover:bg-white shadow-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-bold text-emerald-600 uppercase">Coding</span>
+                <span class="text-[9px] bg-red-100 text-red-800 font-extrabold px-1.5 py-0.2 rounded">Ultra</span>
+              </div>
+              <div class="text-xs font-bold text-slate-900 mt-1 line-clamp-1">React Hero Section</div>
+              <div class="text-[10px] text-slate-500 mt-0.5">120m • Min ₹2,000</div>
+            </button>
+            <button type="button" onclick="app.loadTemplate(TASK_TEMPLATES[2])" class="btn-spring p-3 text-left border rounded-xl hover:border-indigo-600 focus:ring-2 focus:ring-indigo-500 transition-all bg-slate-50/90 hover:bg-white shadow-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-bold text-amber-600 uppercase">Writing</span>
+                <span class="text-[9px] bg-slate-200 text-slate-700 font-extrabold px-1.5 py-0.2 rounded">Standard</span>
+              </div>
+              <div class="text-xs font-bold text-slate-900 mt-1 line-clamp-1">3 LinkedIn Hooks</div>
+              <div class="text-[10px] text-slate-500 mt-0.5">60m • Min ₹800</div>
+            </button>
+            <button type="button" onclick="app.loadTemplate(TASK_TEMPLATES[3])" class="btn-spring p-3 text-left border rounded-xl hover:border-indigo-600 focus:ring-2 focus:ring-indigo-500 transition-all bg-slate-50/90 hover:bg-white shadow-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-bold text-violet-600 uppercase">Data</span>
+                <span class="text-[9px] bg-slate-200 text-slate-700 font-extrabold px-1.5 py-0.2 rounded">Standard</span>
+              </div>
+              <div class="text-xs font-bold text-slate-900 mt-1 line-clamp-1">40 B2B SaaS Leads</div>
+              <div class="text-[10px] text-slate-500 mt-0.5">90m • Min ₹1,000</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Task Input Fields -->
+        <div class="space-y-4">
+          
+          <!-- 1. Task Title -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+              Task Title <span class="text-rose-500">*</span>
+            </label>
+            <input id="task-title-input" type="text" placeholder="e.g. Build Responsive Hero Section in React & Tailwind" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-semibold bg-white/90">
+          </div>
+
+          <!-- 2. Category & Required Skill -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Category</label>
+              <select id="task-category" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-semibold bg-white/90">
+                <option value="design">Graphic Design / UI / Thumbnails</option>
+                <option value="coding">Coding, Frontend & Bug Fixes</option>
+                <option value="writing">Content Writing & Copywriting</option>
+                <option value="data">Data Entry, Lead Research & Scraping</option>
+                <option value="video">Video Editing, Reels & Motion</option>
+              </select>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Required Skill(s)</label>
+                <span class="text-[10px] text-slate-400">Click chips below to add</span>
+              </div>
+              <input id="task-required-skills" type="text" placeholder="e.g. React, Tailwind CSS, Figma" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-semibold bg-white/90">
+              
+              <!-- Quick Skill Tag Chips -->
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                <button type="button" onclick="app.quickSelectSkill('React')" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 border border-slate-200 transition-colors">+ React</button>
+                <button type="button" onclick="app.quickSelectSkill('Tailwind CSS')" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 border border-slate-200 transition-colors">+ Tailwind</button>
+                <button type="button" onclick="app.quickSelectSkill('Figma')" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 border border-slate-200 transition-colors">+ Figma</button>
+                <button type="button" onclick="app.quickSelectSkill('Graphic Design')" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 border border-slate-200 transition-colors">+ Design</button>
+                <button type="button" onclick="app.quickSelectSkill('Python')" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 border border-slate-200 transition-colors">+ Python</button>
+                <button type="button" onclick="app.quickSelectSkill('Content Writing')" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 border border-slate-200 transition-colors">+ Writing</button>
+                <button type="button" onclick="app.quickSelectSkill('Video Editing')" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 border border-slate-200 transition-colors">+ Video</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Urgency & Estimated Completion Time -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                Urgency Level
+              </label>
+              <select id="task-urgency" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-semibold bg-white/90">
+                <option value="ultra">⚡ Ultra Urgent (&lt; 30 Mins Match • Immediate Start)</option>
+                <option value="high" selected>🔥 High Urgency (1–2 Hours Delivery)</option>
+                <option value="standard">🚀 Standard Urgency (3–6 Hours Turnaround)</option>
+                <option value="flexible">🕒 Flexible (Within 24 Hours)</option>
+              </select>
+              <p class="text-[10px] text-slate-500 mt-1">Urgency priority affects student notification sound and badge highlight.</p>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                Estimated Completion Time
+              </label>
+              <select id="task-duration" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-semibold bg-white/90">
+                <option value="30">30 Minutes (Rapid Sprint)</option>
+                <option value="60">60 Minutes (1 Hour)</option>
+                <option value="90" selected>90 Minutes (1.5 Hours)</option>
+                <option value="120">120 Minutes (2 Hours)</option>
+                <option value="180">180 Minutes (3 Hours)</option>
+                <option value="240">240 Minutes (4 Hours)</option>
+              </select>
+              <p class="text-[10px] text-slate-500 mt-1">Timer activates automatically when counter-bid is accepted into escrow.</p>
+            </div>
+          </div>
+
+          <!-- 4. Acceptance Scope -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Clear Acceptance Scope & Deliverables</label>
+            <textarea id="task-desc-input" rows="2" placeholder="List key deliverables, file types, or acceptance criteria..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white/90"></textarea>
+          </div>
+
+          <!-- 5. Budget Range & Minimum Value Bid Option -->
+          <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-200 space-y-4">
+            
+            <!-- Budget Inputs -->
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-black text-slate-800 uppercase tracking-wider">Task Budget Settings</span>
+                <span class="text-[11px] text-slate-500">Quick presets:</span>
+              </div>
+
+              <!-- Quick Budget Presets -->
+              <div class="flex flex-wrap gap-1.5 mb-3">
+                <button type="button" onclick="app.setBudgetPreset(1000)" class="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:border-indigo-500 text-slate-700 shadow-xs">₹1,000</button>
+                <button type="button" onclick="app.setBudgetPreset(2500)" class="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:border-indigo-500 text-slate-700 shadow-xs">₹2,500</button>
+                <button type="button" onclick="app.setBudgetPreset(5000)" class="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:border-indigo-500 text-slate-700 shadow-xs">₹5,000</button>
+                <button type="button" onclick="app.setBudgetPreset(8500)" class="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:border-indigo-500 text-slate-700 shadow-xs">₹8,500</button>
+                <button type="button" onclick="app.setBudgetPreset(12000)" class="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:border-indigo-500 text-slate-700 shadow-xs">₹12,000</button>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Target Desired Price (₹)</label>
+                  <input id="task-target-price" type="number" min="500" step="100" value="5000" class="w-full px-4 py-2 rounded-lg border border-slate-300 text-sm font-bold text-indigo-700 bg-white">
+                  <span class="text-[10px] text-slate-500">What you would ideally like to pay.</span>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Maximum Budget Ceiling (₹)</label>
+                  <input id="task-max-budget" type="number" min="500" step="100" value="7000" class="w-full px-4 py-2 rounded-lg border border-slate-300 text-sm font-bold text-slate-900 bg-white">
+                  <span class="text-[10px] text-slate-500">Highest price you will accept for instant hire or counter-bids.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Minimum Value Bid Option Selector -->
+            <div class="pt-3 border-t border-slate-200">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
+                <div>
+                  <label class="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center space-x-1.5">
+                    <i data-lucide="shield" class="w-3.5 h-3.5 text-indigo-600"></i>
+                    <span>Minimum Value Bid Option</span>
+                  </label>
+                  <span class="text-[10px] text-slate-500">Set the lowest threshold counter-bid students can submit.</span>
+                </div>
+                <span id="current-min-bid-badge" class="text-xs font-black text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 rounded-lg w-fit">Active Floor: ₹1,000</span>
+              </div>
+
+              <!-- Minimum Value Bid Buttons -->
+              <div class="grid grid-cols-2 sm:grid-cols-5 gap-2" id="min-bid-options-container">
+                <button type="button" onclick="app.setMinBidOption(500)" data-min-bid="500" class="btn-min-bid py-2 px-3 rounded-xl border border-slate-200 bg-white hover:border-indigo-500 text-slate-700 font-bold text-xs transition-all text-center">
+                  ₹500 <span class="text-[9px] font-normal block text-slate-400">Micro Sprint</span>
+                </button>
+                <button type="button" onclick="app.setMinBidOption(1000)" data-min-bid="1000" class="btn-min-bid py-2 px-3 rounded-xl border-2 border-indigo-600 bg-indigo-50 text-indigo-800 font-black text-xs transition-all text-center shadow-xs">
+                  ₹1,000 <span class="text-[9px] font-normal block text-indigo-600">Standard</span>
+                </button>
+                <button type="button" onclick="app.setMinBidOption(2500)" data-min-bid="2500" class="btn-min-bid py-2 px-3 rounded-xl border border-slate-200 bg-white hover:border-indigo-500 text-slate-700 font-bold text-xs transition-all text-center">
+                  ₹2,500 <span class="text-[9px] font-normal block text-slate-400">Pro Quality</span>
+                </button>
+                <button type="button" onclick="app.setMinBidOption(5000)" data-min-bid="5000" class="btn-min-bid py-2 px-3 rounded-xl border border-slate-200 bg-white hover:border-indigo-500 text-slate-700 font-bold text-xs transition-all text-center">
+                  ₹5,000 <span class="text-[9px] font-normal block text-slate-400">Enterprise</span>
+                </button>
+                <div class="relative col-span-2 sm:col-span-1">
+                  <input id="custom-min-bid-input" type="number" step="100" min="200" placeholder="Custom ₹" oninput="app.setCustomMinBid(this.value)" class="w-full h-full py-2 px-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
+                </div>
+              </div>
+
+              <!-- Price Floor Notice Bar -->
+              <div id="price-floor-notice" class="mt-3 text-xs text-slate-600 bg-white p-2.5 rounded-lg border border-slate-200 flex items-center shadow-sm">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row gap-3 pt-2">
+            <button onclick="app.postTask(false)" class="btn-spring flex-1 py-3.5 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md shadow-indigo-600/20 transition-all flex items-center justify-center space-x-2">
+              <i data-lucide="timer" class="w-4 h-4"></i>
+              <span>Broadcast for 10-Min Fast Bidding</span>
+            </button>
+            <button onclick="app.postTask(true)" class="btn-spring py-3.5 px-6 rounded-xl bg-slate-900 hover:bg-black text-white font-bold text-sm shadow-md transition-all flex items-center justify-center space-x-2">
+              <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+              <span>Instant Hire (Skip Bidding)</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- STEP 2: ACTIVE 10-MINUTE BIDDING ROOM -->
+      <div id="active-bidding-room" class="mt-6 hidden space-y-6">
+        
+        <!-- Live Ticker Bar with Framer Spring Physics -->
+        <div class="p-6 rounded-2xl bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-900 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-indigo-500/30">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+              </span>
+              <span class="text-xs uppercase font-extrabold tracking-wider text-indigo-300">Live Reverse Bidding Session</span>
+            </div>
+            <h3 id="room-task-title" class="text-xl font-black mt-1">High-CTR YouTube Thumbnail</h3>
+            <div class="flex flex-wrap items-center gap-2 mt-1.5">
+              <span id="room-task-urgency" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 uppercase flex items-center space-x-1 shadow-sm">
+                <span>🔥 High Urgency</span>
+              </span>
+              <span id="room-task-duration-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">90 mins</span>
+              <span id="room-task-floor-badge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Min Bid: ₹1,000</span>
+            </div>
+            <div id="room-task-skills-container" class="flex flex-wrap gap-1.5 mt-2"></div>
+            <p id="room-task-meta" class="text-xs text-indigo-200 mt-1">Target: ₹5,000 • Max Budget: ₹7,000</p>
+          </div>
+
+          <div class="flex items-center space-x-4 bg-white/10 px-4 py-2.5 rounded-xl backdrop-blur-md border border-white/10">
+            <div class="text-right">
+              <div class="text-[10px] uppercase font-bold text-indigo-300">Bidding Closes In</div>
+              <div id="bidding-room-timer" class="text-2xl font-mono font-black text-white">09:59</div>
+            </div>
+            <div class="h-8 w-px bg-white/20"></div>
+            <span id="bids-count-badge" class="text-xs font-bold bg-indigo-500 px-3 py-1 rounded-full shadow-sm">0 Bids</span>
+          </div>
+        </div>
+
+        <!-- Radar Matching Scanner Visual Widget -->
+        <div id="radar-scanner-box" class="p-4 rounded-xl bg-slate-900/90 text-white flex items-center justify-between border border-slate-800 backdrop-blur-md">
+          <div class="flex items-center space-x-3">
+            <div class="relative w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center">
+              <div class="w-3 h-3 rounded-full bg-indigo-400 radar-beacon"></div>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-indigo-300 uppercase tracking-wider block">Live Matching Radar</span>
+              <span class="text-xs text-slate-300">Pinging 18 pre-vetted students currently active in Bengaluru & Delhi NCR</span>
+            </div>
+          </div>
+          <button onclick="app.executeInstantHire()" class="btn-spring text-xs font-extrabold bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg whitespace-nowrap shadow-sm">
+            Instant Hire Best Match ⚡
+          </button>
+        </div>
+
+        <!-- Smart Ranking Logic Banner -->
+        <div class="p-3.5 rounded-xl bg-indigo-50/90 border border-indigo-200 text-xs text-indigo-900 flex items-center justify-between backdrop-blur-md">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="shield-check" class="w-4 h-4 text-indigo-600 flex-shrink-0"></i>
+            <span><strong>Anti-Race-to-Bottom:</strong> Bids are scored 30% Price, 25% Rating, 20% Skill, 15% On-Time, 10% Speed.</span>
+          </div>
+          <span class="text-[11px] font-mono font-bold text-indigo-600">SmartScore™ Algorithmic Floor</span>
+        </div>
+
+        <!-- Real-Time Incoming Bids List -->
+        <div id="bids-live-list" class="space-y-3">
+          <!-- Populated by JavaScript -->
+        </div>
+
+      </div>
+
+      <!-- STEP 3: TASK EXECUTION & ESCROW WORKSPACE -->
+      <div id="task-execution-workspace" class="mt-6 hidden space-y-6">
+        
+        <div class="p-6 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200/80 shadow-sm">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-slate-100 gap-4">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Task In Progress</span>
+              <h3 id="ws-task-title" class="text-xl font-black text-slate-900 mt-1">YouTube Thumbnail Design</h3>
+            </div>
+            <div class="text-right">
+              <span class="text-xs text-slate-400 block font-medium">Turnaround Countdown</span>
+              <span id="ws-execution-countdown" class="text-2xl font-mono font-black text-indigo-600">89:42</span>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="w-full bg-slate-100 h-2 rounded-full mt-4 overflow-hidden">
+            <div id="ws-execution-progress" class="bg-indigo-600 h-2 rounded-full transition-all duration-500" style="width: 15%"></div>
+          </div>
+
+          <!-- Student Card & Escrow Info -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+            <div class="flex items-center space-x-4 p-4 rounded-xl bg-slate-50/90 border border-slate-200">
+              <img id="ws-student-avatar" src="" class="w-14 h-14 rounded-full object-cover border-2 border-indigo-500">
+              <div>
+                <h4 id="ws-student-name" class="font-bold text-slate-900">Student Name</h4>
+                <p id="ws-student-college" class="text-xs text-slate-500">College & Stream</p>
+                <div class="mt-1 flex items-center space-x-2 text-xs text-emerald-600 font-semibold">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  <span>Active & Working Now</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-indigo-50/70 border border-indigo-200 flex flex-col justify-between">
+              <div class="flex justify-between items-center text-xs text-slate-600">
+                <span>Task Bid Amount:</span>
+                <strong id="ws-escrow-amount" class="text-slate-900 font-bold">₹5,000</strong>
+              </div>
+              <div class="flex justify-between items-center text-xs text-slate-600">
+                <span>Platform Fee (10%):</span>
+                <strong id="ws-platform-fee" class="text-slate-900 font-bold">₹500</strong>
+              </div>
+              <div class="pt-2 border-t border-indigo-200 flex justify-between items-center font-bold text-sm text-indigo-950">
+                <span>Total Held in Escrow:</span>
+                <span id="ws-total-charged" class="text-base text-indigo-600 font-black">₹5,500</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Simulated Deliverable Review Box -->
+          <div class="mt-6 p-5 rounded-xl border border-slate-200 bg-slate-50/90">
+            <h4 class="text-sm font-bold text-slate-900 mb-2">Simulated Deliverable Submission (Demo Preview)</h4>
+            <div class="bg-white p-4 rounded-lg border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">
+                  PNG
+                </div>
+                <div>
+                  <div class="text-sm font-bold text-slate-900">thumbnail_v1_final.png (1920x1080)</div>
+                  <div class="text-xs text-slate-500">Submitted 2 minutes ago • Includes Figma asset source link</div>
+                </div>
+              </div>
+              
+              <div class="flex items-center space-x-2">
+                <button onclick="app.releaseEscrowPayout()" class="btn-spring px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition-all flex items-center space-x-1.5">
+                  <i data-lucide="check-circle" class="w-4 h-4"></i>
+                  <span>Approve & Release UPI Payout</span>
+                </button>
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-2">💡 Auto-approval policy: If not reviewed within 2 hours, payout auto-releases to prevent student delay.</p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- TASK COMPLETION MODAL -->
+      <div id="task-completion-modal" class="hidden mt-6 p-8 rounded-2xl bg-emerald-50/90 border-2 border-emerald-500 text-center backdrop-blur-md">
+        <div class="w-16 h-16 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto mb-3 shadow-lg">
+          <i data-lucide="check" class="w-8 h-8 stroke-[3]"></i>
+        </div>
+        <h3 class="text-2xl font-black text-slate-900">Task Successfully Completed!</h3>
+        <p class="text-slate-600 text-sm max-w-md mx-auto mt-2">
+          Deliverable approved. Escrow funds transferred directly to student's UPI account. 
+          Average turnaround time: <strong>74 minutes</strong> (35% faster than deadline).
+        </p>
+        <button onclick="app.resetDemo()" class="btn-spring mt-6 px-6 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-black transition-all">
+          Start Another Task
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 3. STUDENT ("AVAILABLE NOW") DASHBOARD     -->
+    <!-- ========================================== -->
+    <section id="view-student" class="tab-content hidden max-w-4xl mx-auto px-4 sm:px-6 py-8">
+      
+      <!-- STUDENT PROFILE STATUS BAR -->
+      <div class="mb-5 p-4 rounded-2xl bg-gradient-to-r from-emerald-950 via-slate-900 to-indigo-950 text-white border border-emerald-500/30 shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div class="flex items-center space-x-3.5">
+          <div class="w-10 h-10 rounded-xl bg-emerald-600/30 border border-emerald-400/40 flex items-center justify-center text-emerald-300 flex-shrink-0">
+            <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs font-black text-white">Student Portal: Anurag Sen</span>
+              <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase">Level 3 Campus Pro</span>
+              <span class="text-xs text-emerald-400 font-mono font-bold">Balance: ₹15,450</span>
+            </div>
+            <p class="text-[11px] text-slate-300 mt-0.5">IIT Roorkee • 97% On-Time • anurag@okhdfcbank • Managed via bottom-right profile hub.</p>
+          </div>
+        </div>
+        <button onclick="app.openBottomRightProfile('customer')" class="btn-spring px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/30 flex items-center space-x-1.5 whitespace-nowrap">
+          <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
+          <span>Open Student Profile</span>
+          <i data-lucide="arrow-down-right" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <!-- The "Available Now" Presence Engine Controller Card -->
+      <div class="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl p-5 shadow-sm">
+
+        <!-- The "Available Now" Presence Engine Controller -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50/90 p-4 rounded-xl">
+          <div>
+            <div class="flex items-center space-x-2" id="student-status-badge">
+              <span class="inline-block w-2.5 h-2.5 rounded-full bg-slate-400 mr-2"></span>
+              <span class="font-semibold text-slate-500">Currently Offline</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">
+              Active timer: <strong id="student-timer-display" class="font-mono text-slate-800">Offline</strong>
+            </p>
+          </div>
+
+          <div class="flex items-center space-x-3 w-full sm:w-auto">
+            <button id="toggle-available-btn" onclick="app.toggleStudentAvailability(120)" class="btn-spring w-full sm:w-auto px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center space-x-2">
+              <span>⚡ Go "Available Now" (2 Hours)</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Active Micro-Tasks Feed -->
+      <div class="mt-8">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-slate-900">Live Client Broadcast Feed</h3>
+          <span class="text-xs text-indigo-600 font-bold bg-indigo-50 px-2.5 py-1 rounded-full">Min. ₹5,000 Guaranteed</span>
+        </div>
+
+        <!-- Offline Placeholder -->
+        <div id="student-offline-placeholder" class="p-10 text-center bg-white/90 backdrop-blur-md rounded-2xl border border-slate-200">
+          <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+            <i data-lucide="power" class="w-6 h-6"></i>
+          </div>
+          <h4 class="font-bold text-slate-800">You are currently Offline</h4>
+          <p class="text-xs text-slate-500 max-w-sm mx-auto mt-1">
+            Turn ON <strong>"Available Now"</strong> above when you have a 1–3 hour break between classes to receive instant high-paying task alerts (₹5,000+ floor).
+          </p>
+        </div>
+
+        <!-- Live Task Card (Visible when Available) -->
+        <div id="student-task-feed" class="hidden space-y-4">
+          <div class="p-8 text-center bg-white/90 backdrop-blur-md rounded-2xl border border-slate-200">
+            <p class="text-slate-500 font-medium">Listening for live tasks in your categories...</p>
+            <p class="text-xs text-slate-400 mt-1">Switch to the "Client" tab in the header to post a task and test this live!</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Direct Company Enterprise Tasks (Bounties >= ₹5,000) -->
+      <div class="mt-8">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-extrabold bg-indigo-100 text-indigo-800 uppercase">Enterprise Pool</span>
+              <span class="text-xs text-emerald-600 font-bold">100% Escrow Guaranteed</span>
+            </div>
+            <h3 class="text-lg font-black text-slate-900 mt-1">Direct Company Tasks (Min. ₹5,000 Bounty)</h3>
+            <p class="text-xs text-slate-500">Verified unicorn & enterprise tasks with pre-funded escrow ready for 1-click counter bidding.</p>
+          </div>
+          <span class="text-xs font-mono font-bold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200">
+            ₹5,000 - ₹15,000 Payouts
+          </span>
+        </div>
+        <div id="company-tasks-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Populated by app.renderCompanyTasks() -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 4. DUAL SIMULATOR (SPLIT SCREEN MODE)      -->
+    <!-- ========================================== -->
+    <section id="view-split" class="tab-content hidden max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <div class="mb-6 p-4 rounded-xl bg-indigo-50/90 border border-indigo-200 flex items-center justify-between backdrop-blur-md">
+        <div class="flex items-center space-x-2 text-xs text-indigo-900">
+          <i data-lucide="layers" class="w-4 h-4 text-indigo-600"></i>
+          <span><strong>Dual Simulator Mode:</strong> Test how the platform functions when a client posts a task on the left and a student receives it on the right.</span>
+        </div>
+        <button onclick="app.postTask(false)" class="btn-spring text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-1.5 rounded-lg shadow-sm">
+          Simulate Full Task Now 🚀
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- Left Column: Client Perspective -->
+        <div class="p-6 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200 shadow-sm">
+          <div class="flex items-center space-x-2 text-indigo-600 font-bold text-xs uppercase mb-3">
+            <i data-lucide="briefcase" class="w-4 h-4"></i>
+            <span>Client Screen</span>
+          </div>
+          <h3 class="text-base font-black text-slate-900 mb-2">Post YouTube Thumbnail (Target: ₹5,000)</h3>
+          <p class="text-xs text-slate-500 mb-4">Click below to broadcast. Watch the reverse bidding algorithm score bids in real-time.</p>
+          <div class="flex space-x-2">
+            <button onclick="app.postTask(false)" class="btn-spring flex-1 py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm">
+              Broadcast Bidding (10m)
+            </button>
+            <button onclick="app.postTask(true)" class="btn-spring py-2 px-3 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-lg shadow-sm">
+              Instant Hire ⚡
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: Student Perspective -->
+        <div class="p-6 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200 shadow-sm">
+          <div class="flex items-center space-x-2 text-emerald-600 font-bold text-xs uppercase mb-3">
+            <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+            <span>Student Screen</span>
+          </div>
+          <h3 class="text-base font-black text-slate-900 mb-2">Student: Anurag (IIT Roorkee)</h3>
+          <p class="text-xs text-slate-500 mb-4">Toggle availability to receive incoming alerts and submit rapid reverse bids.</p>
+          <div class="flex space-x-2">
+            <button onclick="app.toggleStudentAvailability(120)" class="btn-spring py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow-sm">
+              Toggle Available Now 🟢
+            </button>
+            <button id="sim-counter-bid-btn" onclick="app.submitSimulatorBid()" class="btn-spring py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg border border-slate-300">
+              Submit Counter-Bid (Floor)
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white/80 backdrop-blur-md border-t border-slate-200 py-8 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="font-extrabold text-slate-900">FlashTask Technologies Pvt. Ltd.</span>
+        <span>•</span>
+        <span>Bengaluru & New Delhi</span>
+      </div>
+      <div class="flex flex-wrap items-center space-x-3 text-[11px]">
+        <span class="px-2 py-0.5 rounded bg-slate-100 font-mono text-slate-600">Stitch: 11743152377097638734</span>
+        <span class="px-2 py-0.5 rounded bg-slate-100 font-mono text-slate-600">Screen: f6f26ecf68ae4f799a78e08803c45712</span>
+        <a href="startup-strategy-available-now-platform.md" class="text-indigo-600 hover:underline font-bold">Strategy PRD</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================= -->
+  <!-- 5. SIGN UP MODAL (CLIENT & CUSTOMER REGISTRATION)         -->
+  <!-- ========================================================= -->
+  <div id="signup-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
+    <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl border border-slate-200 overflow-hidden relative max-h-[92vh] flex flex-col">
+      <!-- Modal Header -->
+      <div class="p-6 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white relative flex-shrink-0">
+        <button onclick="app.closeSignUpModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-slate-300 hover:text-white transition-all">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+        <div class="flex items-center space-x-2 text-indigo-400 text-xs font-bold uppercase tracking-wider mb-1">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          <span>Join FlashTask Real-Time Engine</span>
+        </div>
+        <h3 class="text-2xl font-black text-white">Create Your Account</h3>
+        <p class="text-xs text-slate-300 mt-1">Get instant access to reverse-bidding micro-tasks with minimum ₹5,000 guarantee.</p>
+
+        <!-- Role Selector Switch Tabs -->
+        <div class="mt-4 grid grid-cols-2 gap-2 bg-white/10 p-1.5 rounded-2xl backdrop-blur-md border border-white/10">
+          <button id="signup-tab-client" onclick="app.switchSignUpTab('client')" class="py-2.5 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center space-x-2 bg-indigo-600 text-white shadow-md">
+            <i data-lucide="briefcase" class="w-4 h-4"></i>
+            <span>Sign Up as Client (Hire)</span>
+          </button>
+          <button id="signup-tab-customer" onclick="app.switchSignUpTab('customer')" class="py-2.5 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center space-x-2 text-slate-300 hover:text-white">
+            <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+            <span>Sign Up as Customer (Student)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-6 overflow-y-auto space-y-4">
+        <!-- Client Registration Form -->
+        <form id="form-signup-client" onsubmit="app.handleClientSignUp(event)" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Full Name *</label>
+              <input type="text" id="su-client-name" required placeholder="e.g. Kunal Shah" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Designation / Role *</label>
+              <input type="text" id="su-client-title" required placeholder="e.g. Head of Product" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Company / Startup Name *</label>
+              <input type="text" id="su-client-company" required placeholder="e.g. Razorpay Enterprise" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Work Email *</label>
+              <input type="email" id="su-client-email" required placeholder="name@company.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Company GSTIN / Tax ID</label>
+              <input type="text" id="su-client-gst" placeholder="e.g. 29ABCDE1234F1Z5" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-mono font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Initial Escrow Pool (₹) *</label>
+              <input type="number" id="su-client-escrow" min="5000" step="500" value="25000" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-bold text-emerald-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <span class="text-[10px] text-slate-500">Min. ₹5,000 for verified task dispatch.</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Account Password *</label>
+            <input type="password" id="su-client-password" required placeholder="••••••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+
+          <div class="p-3 bg-indigo-50/80 rounded-xl border border-indigo-200 text-xs text-indigo-900 flex items-start space-x-2">
+            <i data-lucide="shield-check" class="w-4 h-4 text-indigo-600 flex-shrink-0 mt-0.5"></i>
+            <span><strong>Client Escrow Guarantee:</strong> 100% escrow security, auto-refund on non-delivery, and zero platform commission for first 5 micro-tasks.</span>
+          </div>
+
+          <button type="submit" class="btn-spring w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm shadow-lg shadow-indigo-600/25 flex items-center justify-center space-x-2">
+            <i data-lucide="briefcase" class="w-4 h-4"></i>
+            <span>Create Client Account & Post Tasks</span>
+          </button>
+        </form>
+
+        <!-- Customer / Student Registration Form -->
+        <form id="form-signup-customer" onsubmit="app.handleCustomerSignUp(event)" class="space-y-4 hidden">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Student Full Name *</label>
+              <input type="text" id="su-cust-name" required placeholder="e.g. Anurag Sen" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">College / University *</label>
+              <input type="text" id="su-cust-college" required placeholder="e.g. IIT Roorkee, BITS, DTU" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Degree & Current Year *</label>
+              <input type="text" id="su-cust-degree" required placeholder="e.g. B.Tech Electrical, 3rd Year" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Student Email (.edu or campus) *</label>
+              <input type="email" id="su-cust-email" required placeholder="student@iitr.ac.in" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">UPI ID (Instant Payouts) *</label>
+              <input type="text" id="su-cust-upi" required placeholder="e.g. yourname@okhdfcbank" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-mono font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <span class="text-[10px] text-slate-500">Payments credited in <2 seconds.</span>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Portfolio / GitHub / Figma Link</label>
+              <input type="url" id="su-cust-portfolio" placeholder="https://github.com/..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Primary Skill Categories</label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50">
+                <input type="checkbox" name="su-cust-skills" value="Graphic Design" checked class="rounded text-indigo-600">
+                <span>Graphic Design</span>
+              </label>
+              <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50">
+                <input type="checkbox" name="su-cust-skills" value="React / Web" checked class="rounded text-indigo-600">
+                <span>React / Web</span>
+              </label>
+              <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50">
+                <input type="checkbox" name="su-cust-skills" value="Content Writing" class="rounded text-indigo-600">
+                <span>Content Writing</span>
+              </label>
+              <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50">
+                <input type="checkbox" name="su-cust-skills" value="Python / Data" class="rounded text-indigo-600">
+                <span>Python / Data</span>
+              </label>
+              <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50">
+                <input type="checkbox" name="su-cust-skills" value="Video Editing" class="rounded text-indigo-600">
+                <span>Video Editing</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Account Password *</label>
+            <input type="password" id="su-cust-password" required placeholder="••••••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+
+          <div class="p-3 bg-emerald-50/80 rounded-xl border border-emerald-200 text-xs text-emerald-900 flex items-start space-x-2">
+            <i data-lucide="zap" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+            <span><strong>Customer Minimum Guarantee:</strong> Guaranteed minimum ₹5,000 per micro-task. Turn on "Available Now" between classes to receive instant task pings.</span>
+          </div>
+
+          <button type="submit" class="btn-spring w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow-lg shadow-emerald-600/25 flex items-center justify-center space-x-2">
+            <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+            <span>Create Customer Account & Start Earning</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- 6. PROFILE MODAL (VIEW & EDIT FOR CLIENT & CUSTOMER)      -->
+  <!-- ========================================================= -->
+  <div id="profile-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
+    <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl border border-slate-200 overflow-hidden relative max-h-[92vh] flex flex-col">
+      <!-- Modal Header -->
+      <div class="p-6 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white relative flex-shrink-0">
+        <button onclick="app.closeProfileModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-slate-300 hover:text-white transition-all">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+        
+        <div class="flex items-center space-x-4">
+          <img id="modal-profile-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80" class="w-16 h-16 rounded-2xl object-cover border-2 border-indigo-500 shadow-md">
+          <div>
+            <div class="flex items-center space-x-2">
+              <h3 id="modal-profile-name" class="text-xl font-black text-white">Kunal Shah</h3>
+              <span id="modal-profile-badge" class="badge-enterprise text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">Client</span>
+            </div>
+            <p id="modal-profile-subtitle" class="text-xs text-indigo-200 mt-0.5">Razorpay Enterprise • Head of Product & Growth</p>
+            <div class="flex items-center space-x-2 mt-1 text-xs text-slate-300">
+              <span id="modal-profile-stat1">⭐ <strong>4.95</strong> Rating</span>
+              <span>•</span>
+              <span id="modal-profile-stat2">📋 <strong>24</strong> Tasks</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Role Toggle Inside Profile Modal -->
+        <div class="mt-5 grid grid-cols-2 gap-2 bg-white/10 p-1.5 rounded-2xl backdrop-blur-md border border-white/10">
+          <button id="profile-tab-client" onclick="app.switchProfileModalTab('client')" class="py-2 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center space-x-2 bg-indigo-600 text-white shadow-md">
+            <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+            <span>Client Profile</span>
+          </button>
+          <button id="profile-tab-customer" onclick="app.switchProfileModalTab('customer')" class="py-2 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center space-x-2 text-slate-300 hover:text-white">
+            <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+            <span>Customer Profile</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-6 overflow-y-auto space-y-4">
+        <!-- Client Profile Form -->
+        <form id="form-edit-client" onsubmit="app.saveProfile(event, 'client')" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Client Name</label>
+              <input type="text" id="edit-client-name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Designation</label>
+              <input type="text" id="edit-client-title" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Company / Organization</label>
+              <input type="text" id="edit-client-company" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Official Email</label>
+              <input type="email" id="edit-client-email" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Company GSTIN</label>
+              <input type="text" id="edit-client-gst" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-mono font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Escrow Balance (₹)</label>
+              <div class="flex space-x-2">
+                <input type="number" id="edit-client-escrow" readonly class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-black text-emerald-700 bg-slate-50">
+                <button type="button" onclick="app.addEscrowFunds()" class="btn-spring px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold whitespace-nowrap">
+                  + Add
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2 flex justify-between items-center">
+            <button type="button" onclick="app.switchProfileRole('customer')" class="btn-spring text-xs font-bold text-indigo-600 hover:underline">
+              Switch Active Role to Customer →
+            </button>
+            <button type="submit" class="btn-spring px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md">
+              Save Client Profile
+            </button>
+          </div>
+        </form>
+
+        <!-- Customer / Student Profile Form -->
+        <form id="form-edit-customer" onsubmit="app.saveProfile(event, 'customer')" class="space-y-4 hidden">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Student Full Name</label>
+              <input type="text" id="edit-cust-name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">College & Degree</label>
+              <input type="text" id="edit-cust-college" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Student Campus Email</label>
+              <input type="email" id="edit-cust-email" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">UPI ID for Payouts</label>
+              <input type="text" id="edit-cust-upi" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-mono font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Wallet Earnings Balance (₹)</label>
+            <div class="flex space-x-2">
+              <input type="number" id="edit-cust-wallet" readonly class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-black text-slate-900 bg-slate-50">
+              <button type="button" onclick="app.instantCashout()" class="btn-spring px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold whitespace-nowrap">
+                Instant Cashout ⚡
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Primary Skill Tags (comma-separated)</label>
+            <input type="text" id="edit-cust-skills" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+
+          <div class="pt-2 flex justify-between items-center">
+            <button type="button" onclick="app.switchProfileRole('client')" class="btn-spring text-xs font-bold text-indigo-600 hover:underline">
+              Switch Active Role to Client →
+            </button>
+            <button type="submit" class="btn-spring px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md">
+              Save Customer Profile
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- 7. IN-PLATFORM DIRECT MESSAGING DRAWER (ESCROW PROTECTED) -->
+  <!-- ========================================================= -->
+  <div id="chat-drawer" class="fixed bottom-0 right-0 z-50 w-full sm:w-96 max-w-full chat-drawer translate-y-full transition-transform duration-300 shadow-2xl">
+    <div class="bg-white rounded-t-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col h-[520px]">
+      
+      <!-- Chat Header -->
+      <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="relative">
+            <img id="chat-header-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&auto=format&fit=crop&q=80" class="w-9 h-9 rounded-xl object-cover border border-indigo-400">
+            <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border border-slate-900"></span>
+          </div>
+          <div>
+            <h4 id="chat-header-name" class="text-xs font-black text-white leading-tight">Razorpay Enterprise</h4>
+            <span id="chat-header-task" class="text-[10px] text-indigo-300 block">React Checkout Step • ₹8,500 Escrow</span>
+          </div>
+        </div>
+        <div class="flex items-center space-x-1">
+          <button onclick="app.toggleChat(false)" class="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-all">
+            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Anti-Leak Escrow Safety Warning Banner -->
+      <div class="anti-leak-banner px-3 py-2 text-[10px] text-amber-900 flex items-center space-x-1.5">
+        <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-amber-600 flex-shrink-0"></i>
+        <span><strong>Protected Communication:</strong> Keep all files & messages in FlashTask to guarantee automatic escrow release.</span>
+      </div>
+
+      <!-- Conversations Tabs Bar -->
+      <div class="px-3 py-2 bg-slate-50 border-b border-slate-200 flex space-x-2 overflow-x-auto text-xs" id="chat-conversations-bar">
+        <!-- Rendered by app.renderMessagingCorner() -->
+      </div>
+
+      <!-- Chat Messages Container -->
+      <div id="chat-messages-container" class="flex-grow p-4 overflow-y-auto space-y-3 bg-slate-50/50">
+        <!-- Rendered by app.renderChatMessages() -->
+      </div>
+
+      <!-- Chat Input Area -->
+      <form id="chat-input-form" onsubmit="app.sendChatMessage(event)" class="p-3 bg-white border-t border-slate-200 flex items-center space-x-2">
+        <input id="chat-message-input" type="text" placeholder="Type a message or delivery update..." class="flex-grow px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        <button type="submit" class="btn-spring p-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm flex items-center justify-center">
+          <i data-lucide="send" class="w-4 h-4"></i>
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- 8. BOTTOM-RIGHT FLOATING PROFILE DOCK & QUICK DASHBOARD    -->
+  <!-- ========================================================= -->
+
+  <!-- BOTTOM-RIGHT CLIENT & STUDENT PROFILE POPUP CARD -->
+  <div id="bottom-right-profile-popup" class="fixed bottom-20 right-5 z-40 w-[360px] sm:w-[440px] max-w-[calc(100vw-2rem)] bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-3xl shadow-2xl overflow-hidden hidden transition-all duration-300 max-h-[86vh] flex-col">
+    <!-- Header with Gradient and Profile Selector Tabs -->
+    <div class="p-4 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white flex-shrink-0">
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-xl bg-indigo-600/40 border border-indigo-400/30 flex items-center justify-center text-indigo-300">
+            <i data-lucide="layers" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h4 class="text-xs font-black tracking-wide text-white uppercase flex items-center space-x-1.5">
+              <span>Profiles & Accounts Hub</span>
+              <span class="bg-indigo-500/30 text-indigo-200 text-[9px] px-1.5 py-0.2 rounded font-mono">Corner Dock</span>
+            </h4>
+            <span class="text-[10px] text-indigo-200">Switch & Manage Client and Student Profiles</span>
+          </div>
+        </div>
+        <button onclick="app.toggleBottomRightProfile(false)" class="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-all">
+          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <!-- Tab Switcher between Client Profile and Student Profile -->
+      <div class="mt-3 grid grid-cols-2 gap-2 bg-white/10 p-1 rounded-2xl backdrop-blur-md border border-white/10 text-xs">
+        <button id="br-tab-client" type="button" onclick="app.switchBottomRightTab('client')" class="py-2 px-3 rounded-xl font-bold transition-all flex items-center justify-center space-x-1.5 bg-indigo-600 text-white shadow-md">
+          <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+          <span>Client Profile</span>
+        </button>
+        <button id="br-tab-student" type="button" onclick="app.switchBottomRightTab('student')" class="py-2 px-3 rounded-xl font-bold transition-all flex items-center justify-center space-x-1.5 text-slate-300 hover:text-white">
+          <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+          <span>Student Profile</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Body: Scrollable Profile Views -->
+    <div class="p-4 overflow-y-auto space-y-4 text-xs">
+      
+      <!-- ============================================== -->
+      <!-- 1. RELOCATED CLIENT PROFILE VIEW               -->
+      <!-- ============================================== -->
+      <div id="br-client-view" class="space-y-3.5">
+        
+        <!-- Client Identity Card -->
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white border border-indigo-500/30 shadow-md">
+          <div class="flex items-start space-x-3.5">
+            <div class="relative flex-shrink-0">
+              <img id="client-card-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80" class="w-13 h-13 rounded-2xl object-cover border-2 border-indigo-500 shadow-md">
+              <span class="absolute -bottom-1 -right-1 bg-emerald-500 text-white p-0.5 rounded-full ring-2 ring-slate-900">
+                <i data-lucide="check" class="w-3 h-3 stroke-[3]"></i>
+              </span>
+            </div>
+            <div class="flex-grow min-w-0">
+              <div class="flex items-center space-x-1.5 flex-wrap">
+                <h3 id="client-card-name" class="text-sm font-black text-white truncate">Kunal Shah</h3>
+                <span id="client-card-badge" class="badge-enterprise text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase">Verified Enterprise</span>
+              </div>
+              <p id="client-card-company" class="text-[11px] text-indigo-200 mt-0.5 line-clamp-1">Razorpay Enterprise • Head of Product & Growth</p>
+              <div class="flex flex-wrap items-center gap-2 mt-1.5 text-[10px] text-slate-300">
+                <span>GST: <strong id="client-card-gst" class="font-mono text-white">29ABCDE1234F1Z5</strong></span>
+                <span>•</span>
+                <span>⭐ <strong id="client-card-rating">4.95</strong></span>
+                <span>•</span>
+                <span>📋 <strong id="client-card-tasks">24</strong> Posted</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Escrow Pool Balance Bar -->
+          <div class="mt-3.5 pt-3 border-t border-white/10 flex items-center justify-between">
+            <div>
+              <span class="text-[9px] uppercase font-bold text-indigo-300 block">Locked Escrow Pool</span>
+              <span id="client-card-escrow" class="text-xl font-black text-emerald-400 font-mono">₹45,000</span>
+            </div>
+            <div class="flex space-x-1.5">
+              <button type="button" onclick="app.addEscrowFunds()" class="btn-spring px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] shadow-sm flex items-center space-x-1">
+                <i data-lucide="plus-circle" class="w-3 h-3"></i>
+                <span>Add Funds</span>
+              </button>
+              <button type="button" onclick="app.openProfileModal('client')" class="btn-spring px-2.5 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white font-bold text-[11px] border border-white/20 flex items-center space-x-1">
+                <i data-lucide="edit-3" class="w-3 h-3"></i>
+                <span>Edit</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Client Dashboard Quick Launch Options -->
+        <div class="p-3.5 rounded-2xl bg-indigo-50/70 border border-indigo-200/80 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-black text-[10px] text-indigo-900 uppercase tracking-wider flex items-center space-x-1">
+              <i data-lucide="zap" class="w-3.5 h-3.5 text-indigo-600"></i>
+              <span>Client Dashboard Quick Actions</span>
+            </span>
+            <span class="text-[9px] text-indigo-600 font-bold">1-Click Dispatch</span>
+          </div>
+
+          <button type="button" onclick="app.quickOpenClientDashboard('post')" class="btn-spring w-full py-2.5 px-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md shadow-indigo-600/20 flex items-center justify-between text-left transition-all">
+            <div class="flex items-center space-x-2">
+              <div class="p-1 rounded-lg bg-white/20 text-white">
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+              </div>
+              <div>
+                <div class="text-xs font-black">Post a Micro-Task Now</div>
+                <div class="text-[10px] text-indigo-100">Set budget, urgency, skill & duration</div>
+              </div>
+            </div>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-white"></i>
+          </button>
+
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button type="button" onclick="app.switchProfileRole('client')" class="btn-spring py-2 px-2.5 bg-white hover:bg-slate-50 text-indigo-700 border border-indigo-200 font-bold rounded-xl flex items-center justify-center space-x-1 text-center shadow-xs">
+              <i data-lucide="user-check" class="w-3 h-3"></i>
+              <span>Set as Active Role</span>
+            </button>
+            <button type="button" onclick="app.quickOpenClientDashboard('overview')" class="btn-spring py-2 px-2.5 bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 font-bold rounded-xl flex items-center justify-center space-x-1 text-center shadow-xs">
+              <i data-lucide="layout-dashboard" class="w-3 h-3 text-slate-500"></i>
+              <span>View Dashboard</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- 2. RELOCATED STUDENT PROFILE VIEW              -->
+      <!-- ============================================== -->
+      <div id="br-student-view" class="space-y-3.5 hidden">
+        
+        <!-- Student Identity Card -->
+        <div class="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-md">
+          <div class="flex items-start space-x-3.5">
+            <div class="relative flex-shrink-0">
+              <img id="student-profile-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80" class="w-13 h-13 rounded-2xl object-cover border-2 border-indigo-600 shadow-md">
+              <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white animate-pulse"></span>
+            </div>
+            <div class="flex-grow min-w-0">
+              <div class="flex items-center space-x-1.5 flex-wrap">
+                <h3 id="student-profile-name" class="text-sm font-black text-slate-900 truncate">Anurag Sen</h3>
+                <span id="student-profile-level" class="bg-amber-100 text-amber-900 text-[9px] font-bold px-1.5 py-0.5 rounded">Level 3 Campus Pro</span>
+              </div>
+              <p id="student-profile-college" class="text-[11px] text-slate-500 mt-0.5 line-clamp-1">IIT Roorkee • Electrical Eng. (3rd Year)</p>
+              <div class="flex flex-wrap items-center gap-2 mt-1.5 text-[10px] text-slate-600">
+                <span>⭐ <strong id="student-profile-rating">4.85</strong> Rating</span>
+                <span>•</span>
+                <span>✅ <strong id="student-profile-tasks">19</strong> Tasks</span>
+                <span>•</span>
+                <span>⚡ <strong id="student-profile-ontime">97%</strong> On-Time</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Student Payout & UPI Bar -->
+          <div class="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between">
+            <div>
+              <span class="text-[9px] uppercase font-bold text-slate-400 block">Available UPI Balance</span>
+              <div class="flex items-baseline space-x-1.5">
+                <span id="student-wallet-display" class="text-xl font-black text-slate-900 font-mono">₹15,450</span>
+                <span id="student-profile-upi" class="text-[10px] text-indigo-600 font-semibold font-mono truncate max-w-[120px]">anurag@okhdfcbank</span>
+              </div>
+            </div>
+            <button type="button" onclick="app.instantCashout()" class="btn-spring px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] shadow-sm flex items-center space-x-1">
+              <span>Cashout</span>
+              <i data-lucide="arrow-up-right" class="w-3 h-3"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Student Availability & Work Controls -->
+        <div class="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-black text-[10px] text-emerald-900 uppercase tracking-wider flex items-center space-x-1">
+              <i data-lucide="activity" class="w-3.5 h-3.5 text-emerald-600"></i>
+              <span>Available Now Engine</span>
+            </span>
+            <span class="text-[9px] text-emerald-700 font-bold font-mono">Min. ₹5,000 Guarantee</span>
+          </div>
+
+          <button type="button" onclick="app.toggleStudentAvailability(120)" class="btn-spring w-full py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md shadow-emerald-600/20 flex items-center justify-between text-left transition-all">
+            <div class="flex items-center space-x-2">
+              <div class="p-1 rounded-lg bg-white/20 text-white">
+                <i data-lucide="power" class="w-3.5 h-3.5"></i>
+              </div>
+              <div>
+                <div class="text-xs font-black">Toggle Available Now</div>
+                <div class="text-[10px] text-emerald-100">Receive reverse bidding task alerts</div>
+              </div>
+            </div>
+            <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-300"></i>
+          </button>
+
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button type="button" onclick="app.switchProfileRole('customer')" class="btn-spring py-2 px-2.5 bg-white hover:bg-slate-50 text-emerald-700 border border-emerald-200 font-bold rounded-xl flex items-center justify-center space-x-1 text-center shadow-xs">
+              <i data-lucide="user-check" class="w-3 h-3"></i>
+              <span>Set as Active Role</span>
+            </button>
+            <button type="button" onclick="app.switchView('student')" class="btn-spring py-2 px-2.5 bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 font-bold rounded-xl flex items-center justify-center space-x-1 text-center shadow-xs">
+              <i data-lucide="graduation-cap" class="w-3 h-3 text-slate-500"></i>
+              <span>Open Student View</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- 3. PROFILE CUSTOMIZER & AVATAR PICKER          -->
+      <!-- ============================================== -->
+      <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+        <div class="flex items-center justify-between">
+          <label class="font-bold text-slate-700 uppercase text-[10px] flex items-center space-x-1">
+            <i data-lucide="palette" class="w-3 h-3 text-indigo-600"></i>
+            <span>Customize Active Profile Picture</span>
+          </label>
+          <span class="text-[9px] text-indigo-600 font-bold">1-Click Apply</span>
+        </div>
+        
+        <div class="grid grid-cols-4 gap-2">
+          <button type="button" onclick="app.setBottomRightAvatar('https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80')" title="Male Executive" class="p-1 rounded-xl border-2 border-indigo-500 hover:scale-105 transition-transform bg-white shadow-xs">
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80" class="w-full h-9 rounded-lg object-cover">
+          </button>
+          <button type="button" onclick="app.setBottomRightAvatar('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80')" title="Female Designer" class="p-1 rounded-xl border border-slate-200 hover:border-indigo-500 hover:scale-105 transition-transform bg-white shadow-xs">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" class="w-full h-9 rounded-lg object-cover">
+          </button>
+          <button type="button" onclick="app.setBottomRightAvatar('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80')" title="Male Developer" class="p-1 rounded-xl border border-slate-200 hover:border-indigo-500 hover:scale-105 transition-transform bg-white shadow-xs">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" class="w-full h-9 rounded-lg object-cover">
+          </button>
+          <button type="button" onclick="app.setBottomRightAvatar('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80')" title="Student Avatar" class="p-1 rounded-xl border border-slate-200 hover:border-indigo-500 hover:scale-105 transition-transform bg-white shadow-xs">
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80" class="w-full h-9 rounded-lg object-cover">
+          </button>
+        </div>
+
+        <!-- Quick Profile Name & Info Form -->
+        <form onsubmit="app.saveBottomRightProfile(event)" class="space-y-2 pt-1 border-t border-slate-200">
+          <div>
+            <label class="block font-bold text-slate-600 text-[9px] uppercase mb-0.5">Edit Display Name</label>
+            <input id="br-profile-name-input" type="text" placeholder="Your Name" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 font-semibold text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 text-[9px] uppercase mb-0.5" id="br-org-label">Company / University</label>
+            <input id="br-profile-org-input" type="text" placeholder="Company or College" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 font-semibold text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
+          </div>
+          <button type="submit" class="btn-spring w-full py-1.5 bg-slate-900 hover:bg-black text-white font-bold rounded-lg text-xs shadow-xs transition-all flex items-center justify-center space-x-1">
+            <i data-lucide="check" class="w-3 h-3 text-emerald-400"></i>
+            <span>Save Quick Changes</span>
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BOTTOM-RIGHT FLOATING DOCK (PROFILE WIDGET + CHAT BUTTON) -->
+  <div id="bottom-right-dock" class="fixed bottom-5 right-5 z-40 flex items-center space-x-2">
+    
+    <!-- RELOCATED CLIENT & STUDENT PROFILES BUTTON IN BOTTOM RIGHT CORNER -->
+    <button id="bottom-profile-btn" onclick="app.toggleBottomRightProfile()" title="Client & Student Profiles Hub (Click to open)" class="btn-spring flex items-center bg-white/95 hover:bg-white backdrop-blur-xl border border-slate-200/90 hover:border-indigo-400 rounded-2xl px-3 py-2 shadow-xl shadow-slate-900/10 transition-all text-left">
+      <div class="relative flex-shrink-0">
+        <img id="bottom-profile-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80" class="w-8 h-8 rounded-xl object-cover border-2 border-indigo-500 shadow-sm">
+        <span id="bottom-profile-status-dot" class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white animate-pulse"></span>
+      </div>
+      <div class="hidden sm:flex flex-col ml-2.5 mr-1">
+        <div class="flex items-center space-x-1.5">
+          <span id="bottom-profile-name" class="text-xs font-black text-slate-900 leading-tight">Kunal Shah</span>
+          <span id="bottom-profile-role" class="bg-indigo-100 text-indigo-800 text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">Client</span>
+        </div>
+        <span id="bottom-profile-balance" class="text-[10px] text-emerald-600 font-bold font-mono leading-tight">Escrow: ₹45,000</span>
+      </div>
+      <div class="ml-1 sm:ml-2 p-1 rounded-lg bg-slate-100 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 transition-colors">
+        <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+      </div>
+    </button>
+
+    <!-- FLOATING CHAT TRIGGER BUTTON -->
+    <button id="chat-floating-btn" onclick="app.toggleChat()" class="btn-spring px-3.5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-xl shadow-indigo-600/30 flex items-center space-x-2">
+      <div class="relative">
+        <i data-lucide="message-square" class="w-4 h-4"></i>
+        <span id="chat-unread-badge" class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-400 ring-2 ring-indigo-600"></span>
+      </div>
+      <span class="hidden md:inline">Task Chat</span>
+      <span class="bg-indigo-500 text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">2</span>
+    </button>
+  </div>
+  <script src="app.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
